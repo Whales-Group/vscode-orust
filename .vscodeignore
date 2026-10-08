@@ -1,0 +1,10 @@
+.vscode/
+src/
+tsconfig.json
+*.ts
+node_modules/
+lsp.txt
+todo.md
+update-command.txt
+out/rustBridge.js
+out/rustBridge.js.map

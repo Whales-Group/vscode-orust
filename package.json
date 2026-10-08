@@ -1,0 +1,144 @@
+{
+  "name": "orust-vscode",
+  "displayName": "ORust Language Support",
+  "description": "Language support for ORust (.or) source files.",
+  "version": "0.3.1",
+  "publisher": "digitwhale",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Jesse-Dan/Orust.git"
+  },
+  "homepage": "https://github.com/Jesse-Dan/Orust",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "activationEvents": [
+    "onLanguage:orust"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "orust",
+        "aliases": [
+          "ORust",
+          "orust"
+        ],
+        "extensions": [
+          ".or"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "orust",
+        "scopeName": "source.orust",
+        "path": "./syntaxes/orust.tmLanguage.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "orust.restartLanguageServer",
+        "title": "ORust: Restart Language Server"
+      },
+      {
+        "command": "orust.runFile",
+        "title": "ORust: Run File"
+      },
+      {
+        "command": "orust.debugFile",
+        "title": "ORust: Debug File"
+      },
+      {
+        "command": "orust.openImport",
+        "title": "ORust: Open Import"
+      },
+      {
+        "command": "orust.installRustAnalyzer",
+        "title": "ORust: Install Rust Analyzer"
+      },
+      {
+        "command": "orust.createLaunchConfiguration",
+        "title": "ORust: Create launch.json"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "orust.runFile",
+          "when": "editorLangId == orust",
+          "group": "navigation@1"
+        },
+        {
+          "command": "orust.debugFile",
+          "when": "editorLangId == orust",
+          "group": "navigation@2"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "orust.createLaunchConfiguration",
+          "when": "resourceLangId == orust"
+        }
+      ]
+    },
+    "debuggers": [
+      {
+        "type": "orust",
+        "label": "ORust",
+        "languages": ["orust"],
+        "initialConfigurations": [
+          {
+            "type": "orust",
+            "request": "launch",
+            "name": "Debug current ORust file",
+            "program": "${file}",
+            "cwd": "${workspaceFolder}",
+            "orust": "${config:orust.cliPath}"
+          }
+        ]
+      }
+    ],
+    "configuration": {
+      "title": "ORust",
+      "properties": {
+        "orust.lspPath": {
+          "type": "string",
+          "default": "",
+          "description": "Path to orust-lsp. Empty uses the executable from PATH."
+        },
+        "orust.rustAnalyzerPath": {
+          "type": "string",
+          "default": "",
+          "description": "Optional path to rust-analyzer for Rust code embedded in ORust. Empty uses PATH."
+        },
+        "orust.cliPath": {
+          "type": "string",
+          "default": "",
+          "description": "Path to the ORust CLI. Empty uses the `orust` executable from PATH."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p ./ && esbuild src/extension.ts --bundle --platform=node --external:vscode --outfile=out/extension.js --sourcemap",
+    "watch": "tsc -watch -p ./",
+    "check": "tsc --noEmit -p ./",
+    "package": "npm run compile && vsce package --no-dependencies"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^3.9.2",
+    "esbuild": "^0.25.12",
+    "typescript": "^5.3.0"
+  },
+  "dependencies": {
+    "vscode-languageclient": "^9.0.1"
+  }
+}
